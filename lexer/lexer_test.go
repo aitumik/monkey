@@ -6,20 +6,64 @@ import (
 )
 
 func TestNextToken(t *testing.T) {
-  input := `=+(){},;`
+  input := 
+  `
+  let a = 5;
+  `
+  /**
+    let b = 6;
+
+    let add = fn(x,y) {
+      x + y;
+    };
+
+    let result = add(a,b)
+  `
+  **/
   tests :=[]struct{
     expectedType     token.TokenType
     expectedLiteral  string
   }{
+    {token.LET,"let"},
+    {token.IDENT, "a"},
     {token.ASSIGN,"="},
-    {token.PLUS, "+"},
+    {token.INT,"5"},
+    {token.SEMICOLON,";"},
+    /**
+    {token.LET,"let"},
+    {token.IDENT, "b"},
+    {token.ASSIGN,"="},
+    {token.INT,"6"},
+    {token.COMMA,";"},
+
+    {token.LET,"let"},
+    {token.IDENT, "add"},
+    {token.ASSIGN,"="},
+    {token.FUNCTION,"fn"},
     {token.LPAREN,"("},
+    {token.IDENT,"x"},
+    {token.COMMA,","},
     {token.RPAREN,")"},
     {token.LBRACE,"{"},
+    {token.IDENT, "x"},
+    {token.PLUS, "+"},
+    {token.IDENT, "y"},
+    {token.SEMICOLON, ";"},
     {token.RBRACE,"}"},
+    {token.SEMICOLON, ";"},
+
+    {token.LET,"let"},
+    {token.IDENT, "result"},
+    {token.ASSIGN,"="},
+    {token.IDENT,"add"},
+    {token.LPAREN,"("},
+    {token.IDENT,"a"},
     {token.COMMA,","},
-    {token.SEMICOLON,";"},
-    {token.EOF,""},
+    {token.IDENT,"b"},
+    {token.RPAREN,")"},
+    {token.COMMA,";"},
+    **/
+    {token.EOF, ""},
   }
 
   l := New(input)
