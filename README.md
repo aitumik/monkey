@@ -19,6 +19,8 @@ let result = add(a,b)
 ```
 > The result will be 11
 
+
+
 # Resources
 * Engineering a compiler - Book
-* Crafting interpreters  - Book
+:* Crafting interpreters  - Book

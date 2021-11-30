@@ -1,6 +1,7 @@
 package lexer
 
 import (
+  "fmt"
   "github.com/aitumik/monkey/token"
 )
 
@@ -15,6 +16,7 @@ type Lexer struct {
 // method on struct lexer
 func (l *Lexer) readChar() {
   //if finished set it to EOF 
+  fmt.Println("Trying to read char")
   if l.readPos >= len(l.input) {
     l.ch = 0
   } else {
@@ -57,8 +59,10 @@ func (l *Lexer) NextToken() token.Token {
   return tok
 }
 
-func newToken(tokenType token.TokenType,ch byte) token.Token {
-  return token.Token{Type: tokenType,Literal: string(ch)}
+func newToken(tokenType token.TokenType,ch byte) (tok token.Token) {
+  tok = token.Token{Type: tokenType,Literal: string(ch)}
+  fmt.Println("Creating new token : ",ch,tokenType)
+  return
 }
 
 func New(input string) *Lexer {
