@@ -5,74 +5,38 @@ import (
   "github.com/aitumik/monkey/token"
 )
 
+type TestCase struct {
+    expectedType  token.TokenType
+    expectedLiteral string
+}
+
 func TestNextToken(t *testing.T) {
-  input := 
-  `
-  let a = 5;
-  `
-  /**
-    let b = 6;
+    input := `=+(){},;`
 
-    let add = fn(x,y) {
-      x + y;
-    };
+    l := New(input)
 
-    let result = add(a,b)
-  `
-  **/
-  tests :=[]struct{
-    expectedType     token.TokenType
-    expectedLiteral  string
-  }{
-    {token.LET,"let"},
-    {token.IDENT, "a"},
-    {token.ASSIGN,"="},
-    {token.INT,"5"},
-    {token.SEMICOLON,";"},
-    /**
-    {token.LET,"let"},
-    {token.IDENT, "b"},
-    {token.ASSIGN,"="},
-    {token.INT,"6"},
-    {token.COMMA,";"},
-
-    {token.LET,"let"},
-    {token.IDENT, "add"},
-    {token.ASSIGN,"="},
-    {token.FUNCTION,"fn"},
-    {token.LPAREN,"("},
-    {token.IDENT,"x"},
-    {token.COMMA,","},
-    {token.RPAREN,")"},
-    {token.LBRACE,"{"},
-    {token.IDENT, "x"},
-    {token.PLUS, "+"},
-    {token.IDENT, "y"},
-    {token.SEMICOLON, ";"},
-    {token.RBRACE,"}"},
-    {token.SEMICOLON, ";"},
-
-    {token.LET,"let"},
-    {token.IDENT, "result"},
-    {token.ASSIGN,"="},
-    {token.IDENT,"add"},
-    {token.LPAREN,"("},
-    {token.IDENT,"a"},
-    {token.COMMA,","},
-    {token.IDENT,"b"},
-    {token.RPAREN,")"},
-    {token.COMMA,";"},
-    **/
-    {token.EOF, ""},
-  }
-
-  l := New(input)
-
-  for i,tt := range tests {
-    tok := l.NextToken()
-    if tok.Type != tt.expectedType {
-      t.Fatalf("tests[%d] - literal wrong. expected=%s, got=%q",i,tt.expectedLiteral,tok.Literal)
+    tests := []TestCase{
+        {token.ASSIGN, "="},
+        {token.PLUS,"+"},
+        {token.LPAREN,"("},
+        {token.RPAREN,")"},
+        {token.LBRACE,"{"},
+        {token.RBRACE,"}"},
+        {token.COMMA,","},
+        {token.SEMICOLON,";"},
+        {token.EOF,""},
     }
-  }
+
+    for index,testcase := range tests {
+        tok := l.NextToken()
+
+        if tok.Type != testcase.expectedType {
+            t.Fatalf("test %d => %q != %q",index,testcase.expectedType,tok.Type)
+        }
+
+        if tok.Literal != testcase.expectedLiteral {
+            t.Fatalf("%q != %q",testcase.expectedLiteral,tok.Literal)
+        }
+    }
 }
 

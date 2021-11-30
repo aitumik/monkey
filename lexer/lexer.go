@@ -66,7 +66,7 @@ func newToken(tokenType token.TokenType,ch byte) (tok token.Token) {
 }
 
 func New(input string) *Lexer {
-  l := &Lexer{input : input}
-  l.readChar()
-  return l
+    l := &Lexer{input: input}
+    l.readChar()
+    return l
 }
