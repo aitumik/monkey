@@ -1,72 +1,90 @@
 package lexer
 
 import (
-  "fmt"
   "github.com/aitumik/monkey/token"
 )
 
-// lexer struct
 type Lexer struct {
-  input    string
-  position int
-  readPos  int
-  ch       byte
+  input        string
+  position     int
+  readPosition int
+  ch           byte
 }
 
-// method on struct lexer
+func New(input string) *Lexer {
+  l := &Lexer{input: input}
+  l.readChar()
+  return l
+}
+
 func (l *Lexer) readChar() {
-  //if finished set it to EOF 
-  fmt.Println("Trying to read char")
-  if l.readPos >= len(l.input) {
+  if l.readPosition >= len(l.input) {
     l.ch = 0
   } else {
-    // else get the last read pos and set the run
-    // to ch
-    l.ch = l.input[l.readPos]
+    // what do you think will happen
+    l.ch = l.input[l.readPosition]
   }
-
-  l.position = l.readPos
-  l.readPos += 1
+  l.position = l.readPosition
+  l.readPosition += 1
 }
 
-// method NextToken() returns a token
 func (l *Lexer) NextToken() token.Token {
   var tok token.Token
+  l.skipWhiteSpace()
   switch l.ch {
-    case '=' :
-      // makes the (token,lexeme)
-      tok = newToken(token.ASSIGN,l.ch)
-    case ';':
-      tok = newToken(token.SEMICOLON,l.ch)
-    case ',':
-      tok = newToken(token.COMMA,l.ch)
-    case '+':
-      tok = newToken(token.PLUS,l.ch)
-    case '(':
-      tok = newToken(token.LPAREN,l.ch)
-    case ')':
-      tok = newToken(token.RPAREN,l.ch)
-    case '{':
-      tok = newToken(token.LBRACE,l.ch)
-    case '}':
-      tok = newToken(token.RBRACE,l.ch)
-    case 0:
-      tok.Literal = ""
-      tok.Type    = token.EOF
+  case '=':
+    tok = newToken(token.ASSIGN,l.ch)
+  case ';':
+    tok = newToken(token.SEMICOLON,l.ch)
+  case '(':
+    tok = newToken(token.LPAREN,l.ch)
+  case ')':
+    tok = newToken(token.RPAREN,l.ch)
+  case ',':
+    tok = newToken(token.COMMA,l.ch)
+  case '+':
+    tok = newToken(token.PLUS,l.ch)
+  case '{':
+    tok = newToken(token.LBRACE,l.ch)
+  case '}':
+    tok = newToken(token.RBRACE,l.ch)
+  default:
+    if isLetter(l.ch) {
+      tok.Literal = l.readIdentifier()
+      tok.Type  = token.LookupIdent(tok.Literal)
+      return tok
+    } else {
+      tok = newToken(token.ILLEGAL,l.ch)
+    }
+  case 0:
+    tok.Literal = ""
+    tok.Type = token.EOF
   }
 
   l.readChar()
   return tok
 }
 
-func newToken(tokenType token.TokenType,ch byte) (tok token.Token) {
-  tok = token.Token{Type: tokenType,Literal: string(ch)}
-  fmt.Println("Creating new token : ",ch,tokenType)
-  return
+func (l *Lexer) readIdentifier() string {
+  position := l.position
+  for isLetter(l.ch) {
+    l.readChar()
+  }
+  return l.input[position:l.position]
 }
 
-func New(input string) *Lexer {
-    l := &Lexer{input: input}
+func (l *Lexer) skipWhiteSpace() {
+  for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
     l.readChar()
-    return l
+  }
 }
+
+func isLetter(ch byte) bool {
+  return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
+}
+
+func newToken(tokenType token.TokenType,ch byte) token.Token {
+  return token.Token{Type: tokenType,Literal : string(ch)}
+}
+
+
