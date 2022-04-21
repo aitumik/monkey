@@ -11,6 +11,13 @@ const (
     // operators - +,-,*,/
     ASSIGN    = "="
     PLUS      = "+"
+    MINUS     = "-"
+    BANG      = "!"
+    ASTERISK  = "*"
+    SLASH     = "/"
+
+    LT = "<"
+    GT = ">"
 
     // delimeters
     COMMA     = ","
@@ -25,6 +32,15 @@ const (
     // keywords
     FUNCTION  = "FUNCTION"
     LET       = "LET"
+    TRUE      = "TRUE"
+    FALSE     = "FALSE"
+    RETURN    = "RETURN"
+    IF        = "IF"
+    ELSE      = "ELSE"
+
+    // 2 char tokens
+    EQ        = "=="
+    NE        = "!="
 )
 
 
@@ -33,6 +49,11 @@ type TokenType string
 var keywords = map[string]TokenType{
   "fn" : FUNCTION,
   "let" : LET,
+  "true" : TRUE,
+  "false" : FALSE,
+  "return" : RETURN,
+  "if" : IF,
+  "else" : ELSE,
 }
 
 type Token struct {
