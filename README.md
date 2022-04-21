@@ -13,7 +13,7 @@ let b = 6;
 
 let add = fn(x,y) {
   x + y;
-}
+};
 
 let result = add(a,b)
 ```
@@ -23,4 +23,5 @@ let result = add(a,b)
 
 # Resources
 * Engineering a compiler - Book
-:* Crafting interpreters  - Book
+* Crafting interpreters  - Book
+* Writing and interpreter in go - Book
