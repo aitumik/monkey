@@ -2,22 +2,18 @@ package main
 
 import (
   "fmt"
-  "github.com/aitumik/monkey/lexer"
+  "github.com/aitumik/monkey/repl"
+  "os"
+  "os/user"
 )
 
-func lexString() {
-  input := `let a = 5;`
-
-  l := lexer.New(input)
-  tok := l.NextToken()
-  fmt.Println(tok.Type)
-  tok = l.NextToken()
-  fmt.Println(tok.Type)
-  tok = l.NextToken()
-  fmt.Println(tok.Type)
-}
-
 func main() {
-  fmt.Println("Monkey language")
-  lexString()
+  user,err := user.Current()
+  if err != nil {
+    panic(err)
+  }
+
+  fmt.Printf("Hello %s! This is Monkey programming language!\n",user.Username)
+  fmt.Printf("Feel free to type in any commands\n")
+  repl.Start(os.Stdin,os.Stdout)
 }
